@@ -1,9 +1,10 @@
 import streamlit as st
 import numpy as np
 from PIL import Image
-import pickle
+# import pickle
 import cv2
 import matplotlib.pyplot as plt
+from tensorflow.keras.models import load_model
 
 st.write("HELLO")
 
@@ -21,7 +22,8 @@ def preprocess_image(image):
   return X
 
 def predict_keypoints(img):
-  model = pickle.load(open("my_streamlit_page/model_keypoints_detection.pkl","rb"))
+  model = load_model('my_streamlit_page/my_model')
+  # model = pickle.load(open("my_streamlit_page/model_keypoints_detection.pkl","rb"))
   y_pred = model.predict(img)
   keypoints = y_pred[0].reshape(15, 2)
   return keypoints
@@ -36,11 +38,7 @@ def plot_keypoints(img, keypoints):
     ax.spines[spine].set_visible(False)
   st.pyplot(fig)
 
-
-  
-# def main():
 st.title("Detect Keypoints")
-# st.subheader("Image")
 image_file = st.file_uploader("Upload Images", type=["png","jpg","jpeg"])
 
 if image_file is not None:
