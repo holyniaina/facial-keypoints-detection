@@ -8,10 +8,11 @@ import pickle
 
 app = FastAPI()
 
-def predict_keypoints():
+def predict_keypoints(img):
     model = pickle.load(open("./model_keypoints_detection.pkl","rb"))
-    y_pred = model.predict()
-    return y_pred
+    y_pred = model.predict(img)
+    keypoints = y_pred[0].reshape(15, 2)
+    return keypoints
 
 
 def preprocess_image(image): 
@@ -23,22 +24,21 @@ def preprocess_image(image):
     X = image_reshaped/255.
     return X
 
-@app.post("/uploadfile/") 
-async def create_upload_file(file: UploadFile):
-    contents = await file.read()
-    nparr = np.fromstring(contents, np.uint8)
-    img = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
-    image = file.file
-    image_preprocess = preprocess_image(image)
-    image_predict_keypoints = predict_keypoints(image_preprocess)
-    _, encoded_img = cv2.imencode('.PNG', image_preprocess)
-    encoded_img = base64.b64encode(encoded_img)
-
-    return{
-        'filename': file.filename,
-        'encoded_img': encoded_img,
+@app.post("/predict_keypoints/") 
+async def prediction_start(keypoints: str):
+    return {
+        'result': keypoints
     }
 
 @app.get("/")
 def read_root():
     return {"Hello": "World"}
+
+# contents = await file.read()
+# nparr = np.fromstring(contents, np.uint8)
+# img = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
+# image = file.file
+# image_preprocess = preprocess_image(image)
+# image_predict_keypoints = predict_keypoints(image_preprocess)
+# _, encoded_img = cv2.imencode('.PNG', image_preprocess)
+# encoded_img = base64.b64encode(encoded_img)
