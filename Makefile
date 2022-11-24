@@ -57,4 +57,4 @@ pypi:
 
 
 streamlit:
-	-@streamlit run my_streamlit_page/streamlit.py
+	-@streamlit run streamlit_page/streamlit.py

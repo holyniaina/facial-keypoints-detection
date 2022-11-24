@@ -24,11 +24,9 @@ def preprocess_image(image):
     X = image_reshaped/255.
     return X
 
-@app.post("/predict_keypoints/") 
-async def prediction_start(keypoints: str):
-    return {
-        'result': keypoints
-    }
+@app.post("/predict_keypoints") 
+def prediction_start(file: str):
+    return {"file_size": len(file)}
 
 @app.get("/")
 def read_root():
