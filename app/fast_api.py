@@ -1,6 +1,6 @@
 import cv2
 
-from fastapi import FastAPI, File, UploadFile
+from fastapi import FastAPI, Request
 import base64
 import numpy as np
 import pickle
@@ -25,8 +25,14 @@ def preprocess_image(image):
     return X
 
 @app.post("/predict_keypoints") 
+<<<<<<< HEAD
 def prediction_start(file: str):
     return {"file_size": len(file)}
+=======
+async def prediction_start(request: Request):
+    return await request.json()
+
+>>>>>>> 7a86ba5a8eedb32a695c7d05ad4ffce4cf86c38b
 
 @app.get("/")
 def read_root():
